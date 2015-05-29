@@ -9,6 +9,7 @@ import db
 import survey
 import panel
 import psv
+import config
 
 Response = namedtuple('Response', 'responseid data')
 SurveyResponses = namedtuple('SurveyResponses', 'surveyid responses')
@@ -65,7 +66,10 @@ def create_sr_panel(sr):
     for r in sr.responses:
         first_name = r.data.get('CI_1_TEXT') or ''
         last_name = r.data.get('CI_2_TEXT') or ''
-        email = r.data.get('CI_3_TEXT') or ''
+#### Temporarily send follow-up surveys to user email
+#        email = r.data.get('CI_3_TEXT') or ''
+        email = config.get_config('user_email')
+####
         ext_data_ref = r.responseid or ''
         marstat = r.data.get('marstat') or ''
         if marstat != '':
