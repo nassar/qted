@@ -13,6 +13,7 @@ config       - modify the configuration file
 debug-server - send requests to the Qualtrics server
 responses    - retrieve response data for tracked surveys and optionally create
                panels for any responses indicating a follow-up
+send         - send invitations to panels for follow-up surveys
 surveys      - list all surveys in account
 track        - add or remove surveys to tracking list
             '''
@@ -24,6 +25,7 @@ def valid_command(cmd):
     return cmd in ( 'config',
                     'debug-server',
                     'responses',
+                    'send',
                     'surveys',
                     'track' )
 
