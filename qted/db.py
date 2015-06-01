@@ -174,20 +174,22 @@ def select_panel_by_panelid(panelid):
     with connect() as conn:
         with cursor(conn) as cur:
             sql = '''
-                  select id, panelid, invited from panel where panelid = %s;
+                  select id, panelid, follow_up_id, invited
+                  from panel
+                  where panelid = %s;
                   '''
             data = (panelid, )
             cur.execute(sql, data)
             return cur.fetchone()
 
-def insert_panel(panelid, invited):
+def insert_panel(panelid, follow_up_id, invited):
     with connect() as conn:
         with cursor(conn) as cur:
             sql = '''
-                  insert into panel (id, panelid, invited)
-                  values (DEFAULT, %s, %s);
+                  insert into panel (id, panelid, follow_up_id, invited)
+                  values (DEFAULT, %s, %s, %s);
                   '''
-            data = (panelid, invited)
+            data = (panelid, follow_up_id, invited)
             cur.execute(sql, data)
 
 def update_panel_by_panelid(panelid, invited):
@@ -199,13 +201,13 @@ def update_panel_by_panelid(panelid, invited):
             data = (invited, panelid)
             cur.execute(sql, data)
 
-def queue_panel(panelid):
+def queue_panel(panelid, follow_up_id):
     """
     Given a panel Id, queue the panel in the database.
     """
     panel = select_panel_by_panelid(panelid)
     if panel is None:
-        insert_panel(panelid, invited=False)
+        insert_panel(panelid, follow_up_id, invited=False)
     else:
         update_panel_by_panelid(panel.id, invited=False)
 

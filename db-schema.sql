@@ -32,6 +32,8 @@ create table panel (
         primary key (id),
     panelid text not null,
         unique (panelid),
+    follow_up_id bigint not null,
+        foreign key (follow_up_id) references follow_up (id),
     invited boolean not null
 );
 
