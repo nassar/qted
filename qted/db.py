@@ -174,7 +174,7 @@ def select_panel_by_panelid(panelid):
     with connect() as conn:
         with cursor(conn) as cur:
             sql = '''
-                  select id, panelid, follow_up_id, invited
+                  select id, panelid, surveyid, invited
                   from panel
                   where panelid = %s;
                   '''
@@ -182,14 +182,14 @@ def select_panel_by_panelid(panelid):
             cur.execute(sql, data)
             return cur.fetchone()
 
-def insert_panel(panelid, follow_up_id, invited):
+def insert_panel(panelid, surveyid, invited):
     with connect() as conn:
         with cursor(conn) as cur:
             sql = '''
-                  insert into panel (id, panelid, follow_up_id, invited)
+                  insert into panel (id, panelid, surveyid, invited)
                   values (DEFAULT, %s, %s, %s);
                   '''
-            data = (panelid, follow_up_id, invited)
+            data = (panelid, surveyid, invited)
             cur.execute(sql, data)
 
 def update_panel_by_panelid(panelid, invited):
@@ -201,13 +201,13 @@ def update_panel_by_panelid(panelid, invited):
             data = (invited, panelid)
             cur.execute(sql, data)
 
-def queue_panel(panelid, follow_up_id):
+def queue_panel(panelid, surveyid):
     """
     Given a panel Id, queue the panel in the database.
     """
     panel = select_panel_by_panelid(panelid)
     if panel is None:
-        insert_panel(panelid, follow_up_id, invited=False)
+        insert_panel(panelid, surveyid, invited=False)
     else:
         update_panel_by_panelid(panel.id, invited=False)
 
@@ -244,6 +244,13 @@ def set_follow_up_surveys(surveyid, follow_up):
                       '''
                 data = baseline_id, followupid, rank
                 cur.execute(sql, data)
+
+def get_next_followupid(surveyid):
+    """
+    Given a surveyid (which may be either a baseline or follow-up survey),
+    return the next follow-up surveyid.
+    """
+
 
 if __name__ == '__main__':
     pass

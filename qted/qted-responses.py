@@ -139,7 +139,8 @@ def run(args):
         for sr in sr_list_panel:
             (surveyid, panel, recipients) = create_sr_panel(sr)
             panels_recipients.append( (surveyid, panel, recipients) )
-            db.queue_panel(panel.panelid)
+            followupid = db.get_next_followupid(surveyid)
+            db.queue_panel(panel.panelid, followupid)
         print_panels_and_recipients(panels_recipients)
 
 if __name__ == '__main__':

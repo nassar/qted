@@ -15,7 +15,7 @@ create table follow_up (
     baseline_id bigint not null,
         foreign key (baseline_id) references survey (id),
     followupid text not null,
-        unique (baseline_id, followupid),
+        unique (followupid),
     rank bigint not null,
         unique (baseline_id, rank)
 );
@@ -32,8 +32,7 @@ create table panel (
         primary key (id),
     panelid text not null,
         unique (panelid),
-    follow_up_id bigint not null,
-        foreign key (follow_up_id) references follow_up (id),
+    surveyid text not null,
     invited boolean not null
 );
 
