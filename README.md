@@ -85,6 +85,8 @@ the file database/database-schema.sql) using the psql tool, e.g.:
 Tutorial
 --------
 
+### Introduction and listing surveys
+
 To see a list of qted commands, enter
 
     $ qted
@@ -124,6 +126,8 @@ Or add the --verbose (-v) option for more detail:
     SV_eDrK72Xw7ywWhud | First Followup  | Active       | 2015-02-13 12:09:05
     SV_0JOsg38Jt1EQ2Mt | Second Followup | Active       | 2015-02-13 12:37:14
 
+### Tracking a survey
+
 To start tracking a survey, use the track command and specify the first few
 characters of the Survey ID (enough characters to uniquely identify a survey).
 Follow-up surveys can be provided using the --follow-up option with a
@@ -141,6 +145,8 @@ To see which surveys are being tracked:
 To stop tracking a survey, use the --stop option:
 
     $ qted track --stop SV_3P3
+
+### Retrieving responses and creating a panel
 
 To retrieve responses from all currently tracked surveys, use the responses
 command:
