@@ -59,7 +59,8 @@ def track_survey(surveyid_select, track, follow_up_select):
     db.track_survey(surveyid, track)
     # Set or delete the list of follow-up surveys
     if track:
-        db.set_follow_up_surveys(surveyid, follow_up)
+        if follow_up != []:
+            db.set_follow_up_surveys(surveyid, follow_up)
     else:
         db.delete_follow_up_surveys(surveyid)
 
