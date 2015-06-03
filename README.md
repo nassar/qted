@@ -85,7 +85,7 @@ the file database/database-schema.sql) using the psql tool, e.g.:
 Tutorial
 --------
 
-### Introduction and listing surveys
+### Running qted and listing surveys
 
 To see a list of qted commands, enter
 
