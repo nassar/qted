@@ -174,13 +174,16 @@ surveys (though the invitations to the follow-up surveys are not yet sent):
     R_3h47oQtJMQf9SIL | SV_3P3Og74F2syoitn | 2015-02-13 14:46:17 | 2
     R_W87bGlrBt04vdoR | SV_3P3Og74F2syoitn | 2015-02-13 14:47:48 | 1 *
 
-    PanelID            | SurveyID           | PanelName
-    ML_4NJIGyusBBFw3cN | SV_3P3Og74F2syoitn | SV_3P3Og74F2syoitn 2015-05-26 150829
+    SurveyID           | FollowupID
+    SV_3P3Og74F2syoitn | SV_eDrK72Xw7ywWhud
+
+    PanelID            | FollowupID         | PanelName
+    ML_dmtHLLbgiqo5d2d | SV_eDrK72Xw7ywWhud | SV_eDrK72Xw7ywWhud 2015-06-03 155852
 
     RecipientID          | ResponseID        | PanelID
-    MLRP_b4x9L4Y7j1F7PNP | R_2s1E04D6Hk8mw5C | ML_4NJIGyusBBFw3cN
-    MLRP_aeK6D7paHQI3pRP | R_25WxkzMyIHXONos | ML_4NJIGyusBBFw3cN
-    MLRP_0enxD9USXmMbeTz | R_W87bGlrBt04vdoR | ML_4NJIGyusBBFw3cN
+    MLRP_6VjRRG2vmWT9ZLn | R_2s1E04D6Hk8mw5C | ML_dmtHLLbgiqo5d2d
+    MLRP_eytVV2dvJ48h4t7 | R_25WxkzMyIHXONos | ML_dmtHLLbgiqo5d2d
+    MLRP_5BcZZKkqTkPJArP | R_W87bGlrBt04vdoR | ML_dmtHLLbgiqo5d2d
 
 Using the --panel option also has the effect of marking the responses as having
 been processed, so that they will not be retrieved again on subsequent
