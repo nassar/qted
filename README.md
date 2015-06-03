@@ -120,35 +120,27 @@ Or add the --verbose (-v) option for more detail:
     $ qted surveys -v
 
     SurveyID           | SurveyName      | SurveyStatus | SurveyCreationDate
-    SV_eDrK72Xw7ywWhud | First Followup  | Active       | 2015-02-13 12:07:05
-    SV_3P3Og74F2syoitn | Baseline        | Active       | 2015-02-13 12:09:18
+    SV_3P3Og74F2syoitn | Baseline        | Active       | 2015-02-13 12:07:18
+    SV_eDrK72Xw7ywWhud | First Followup  | Active       | 2015-02-13 12:09:05
     SV_0JOsg38Jt1EQ2Mt | Second Followup | Active       | 2015-02-13 12:37:14
 
 To start tracking a survey, use the track command and specify the first few
-characters of the Survey Id (enough characters to uniquely identify a survey),
-e.g.:
+characters of the Survey ID (enough characters to uniquely identify a survey).
+Follow-up surveys can be provided using the --follow-up option with a
+comma-separated list of Survey IDs.  E.g.:
 
-    $ qted track SV_3P3
-
-    SV_3P3Og74F2syoitn will be tracked
-
-    $ qted track SV_eDr
-
-    SV_eDrK72Xw7ywWhud will be tracked
+    $ qted track SV_3P3 --follow-up SV_eDr,SV_0JO
 
 To see which surveys are being tracked:
 
     $ qted track
 
-    SurveyID           | SurveyName
-    SV_eDrK72Xw7ywWhud | First Followup
-    SV_3P3Og74F2syoitn | Baseline
+    SurveyID           | FollowupIDs
+    SV_3P3Og74F2syoitn | SV_eDrK72Xw7ywWhud,SV_0JOsg38Jt1EQ2Mt
 
 To stop tracking a survey, use the --stop option:
 
-    $ qted track --stop SV_e
-
-    SV_eDrK72Xw7ywWhud will not be tracked
+    $ qted track --stop SV_3P3
 
 To retrieve responses from all currently tracked surveys, use the responses
 command:

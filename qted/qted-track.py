@@ -6,17 +6,25 @@ import configparser
 
 import db
 import survey
+import psv
+
+def print_tracked_surveys(surveys):
+    """
+    Print a list of surveys, with more detail if verbose is True.
+    """
+    p = 'SurveyID | FollowupIDs\n'
+    for s in surveys:
+        p += '{:s} | {:s}\n'.format(s.surveyid, s.followupids)
+    print(psv.align(p))
+    print()
 
 def list_tracked_surveys():
     """
     Print a list of all surveys that are currently tracked.
     """
     surveys = db.get_all_surveys()
-    tracked_surveyids = [s.surveyid for s in surveys if s.tracked == True]
-    qt_surveys = survey.retrieve_surveys()
-    tracked_qt_surveys = [s for s in qt_surveys
-                          if s['SurveyID'] in tracked_surveyids]
-    survey.print_surveys(tracked_qt_surveys)
+    tracked = [s for s in surveys if s.tracked == True]
+    print_tracked_surveys(tracked)
 
 def locate_surveys(surveyids):
     """
@@ -49,9 +57,6 @@ def track_survey(surveyid_select, track, follow_up_select):
     surveyid = ids[0]
     follow_up = ids[1:]
     db.track_survey(surveyid, track)
-    print( 'Survey {:s} will {:s}be tracked'.format( surveyid,
-                                                    '' if track else 'not ' ) )
-    print()
     # Set or delete the list of follow-up surveys
     if track:
         db.set_follow_up_surveys(surveyid, follow_up)

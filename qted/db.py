@@ -23,13 +23,14 @@ def cursor(conn):
 
 def get_all_surveys():
     """
-    Return a list of all surveys as (id, surveyid, tracked) from the database.
+    Return a list of all surveys (id, surveyid, tracked, followupids) from the
+    database.
     """
     with connect() as conn:
         with cursor(conn) as cur:
             sql = '''
                   select t.id, t.surveyid, t.tracked,
-                      array_to_string(array_agg(t.followupid), ',') follow_up
+                      array_to_string(array_agg(t.followupid), ',') followupids
                   from (
                       select s.id, s.surveyid, s.tracked, f.followupid
                       from survey s
