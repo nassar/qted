@@ -46,7 +46,7 @@ def locate_surveys(surveyids):
             return None
     return [ s[1]['SurveyID'] for s in surveys_list ]
 
-def track_survey(surveyid_select, track, follow_up_select):
+def track_survey(surveyid_select, track, follow_up_select, no_follow_up):
     """
     Track or stop tracking the survey specified by surveyid, based on the value
     of track.  If track == True, follow_up can specify a list of follow-up
@@ -59,7 +59,7 @@ def track_survey(surveyid_select, track, follow_up_select):
     db.track_survey(surveyid, track)
     # Set or delete the list of follow-up surveys
     if track:
-        if follow_up != []:
+        if follow_up != [] or no_follow_up:
             db.set_follow_up_surveys(surveyid, follow_up)
     else:
         db.delete_follow_up_surveys(surveyid)
@@ -77,10 +77,19 @@ def run(args):
             print('The --stop option cannot be used with --follow-up')
             print()
             return
+        if args.stop and args.no_follow_up:
+            print('The --stop option cannot be used with --no-follow-up')
+            print()
+            return
+        if args.follow_up and args.no_follow_up:
+            print('The --follow-up option cannot be used with --no-follow-up')
+            print()
+            return
         follow_up_list = ( [s.strip() for s in args.follow_up.split(',')]
                            if args.follow_up is not None else [] )
         track_survey(surveyid_select=args.surveyid, track=(not args.stop),
-                     follow_up_select=follow_up_list)
+                     follow_up_select=follow_up_list,
+                     no_follow_up=args.no_follow_up)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(prog='qted track')
@@ -90,6 +99,9 @@ if __name__ == '__main__':
                         action="store_true")
     parser.add_argument('--follow-up',
                         help='comma-separated list of follow-up survey IDs')
+    parser.add_argument('--no-follow-up',
+                        help='remove previously stored follow-up survey IDs',
+                        action="store_true")
     args = parser.parse_args()
     run(args)
 
