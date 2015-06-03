@@ -146,7 +146,7 @@ To stop tracking a survey, use the --stop option:
 
     $ qted track --stop SV_3P3
 
-### Retrieving responses and creating a panel
+### Retrieving responses and creating panels
 
 To retrieve responses from all currently tracked surveys, use the responses
 command:
