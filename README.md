@@ -182,11 +182,12 @@ surveys (though the invitations to the follow-up surveys are not yet sent):
     MLRP_aeK6D7paHQI3pRP | R_25WxkzMyIHXONos | ML_4NJIGyusBBFw3cN
     MLRP_0enxD9USXmMbeTz | R_W87bGlrBt04vdoR | ML_4NJIGyusBBFw3cN
 
-Using the --panel option also has the effect of marking the responses as
-having been processed, so that they will not be retrieved again on subsequent
-invocations of the responses command:
+Using the --panel option also has the effect of marking the responses as having
+been processed, so that they will not be retrieved again on subsequent
+invocations of the responses command.  In our example, no new responses are
+found:
 
     $ qted responses
 
-    No new responses found
+    ResponseID | SurveyID | EndDate | PANEL
 

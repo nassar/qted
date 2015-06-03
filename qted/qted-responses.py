@@ -142,11 +142,7 @@ def run(args):
     # Select responses that indicate a follow-up (based on the value of PANEL)
     (sr_list_panel, responseids_panel) = filter_responses_panel(sr_list)
     # Print new response data
-    if len(sr_list) > 0:
-        print_response_data(sr_list, responseids_panel)
-    else:
-        print('No new responses found', file=sys.stderr)
-        print()
+    print_response_data(sr_list, responseids_panel)
     # Create a panel per survey
     if args.panel and len(sr_list_panel) > 0:
         panels_recipients = []
