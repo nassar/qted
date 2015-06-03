@@ -12,7 +12,7 @@ import psv
 import config
 
 Response = namedtuple('Response', 'responseid data')
-SurveyResponses = namedtuple('SurveyResponses', 'surveyid responses')
+SurveyResponses = namedtuple('SurveyResponses', 'surveyid responses followupid')
 Panel = namedtuple('Panel', 'panelid panel_name')
 Recipient = namedtuple('Recipient', 'recipientid responseid')
 
@@ -108,7 +108,8 @@ def filter_responses_panel(sr_list):
                 new_r_list.append(Response(r.responseid, r.data))
                 responseids_panel.append(r.responseid)
         if len(new_r_list) > 0:
-            new_sr_list.append(SurveyResponses(sr.surveyid, new_r_list))
+            new_sr_list.append( SurveyResponses( sr.surveyid, new_r_list,
+                                                 sr.followupid) )
     return (new_sr_list, responseids_panel)
 
 def run(args):
@@ -124,10 +125,17 @@ def run(args):
         r_list = [Response(k, v) for k, v in r.items()]
         r_sort = sorted(r_list, key=lambda d: d.data['EndDate'])
         if len(r_sort) > 0:
-            sr_list.append(SurveyResponses(s.surveyid, r_sort))
-            # Update the survey's last_response_id in the database
-            if args.panel:
-                db.set_survey_last_responseid(s.id, r_sort[-1].responseid)
+            followupid = db.get_next_followupid(s.surveyid)
+            sr_list.append(SurveyResponses(s.surveyid, r_sort, followupid))
+            if followupid is None and args.panel:
+                print( 'No follow-up found for survey ' +
+                       '{:s}; the panel will not be created'.format(s.surveyid)
+                       )
+                print()
+            else:
+                # Update the survey's last_response_id in the database
+                if args.panel:
+                    db.set_survey_last_responseid(s.id, r_sort[-1].responseid)
         else:
             if s.last_responseid is None:
                 db.set_survey_last_responseid(s.id, '')
@@ -144,11 +152,11 @@ def run(args):
         panels_recipients = []
         surveys_followups = []
         for sr in sr_list_panel:
-            followupid = db.get_next_followupid(sr.surveyid)
-            surveys_followups.append( (sr.surveyid, followupid) )
-            (panel, recipients) = create_sr_panel(sr, followupid)
-            panels_recipients.append( (followupid, panel, recipients) )
-            db.queue_panel(panel.panelid, followupid)
+            if sr.followupid is not None:
+                surveys_followups.append( (sr.surveyid, sr.followupid) )
+                (panel, recipients) = create_sr_panel(sr, sr.followupid)
+                panels_recipients.append( (sr.followupid, panel, recipients) )
+                db.queue_panel(panel.panelid, sr.followupid)
         print_panels_and_recipients(panels_recipients, surveys_followups)
 
 if __name__ == '__main__':

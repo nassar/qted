@@ -49,8 +49,8 @@ def track_survey(surveyid_select, track, follow_up_select):
     surveyid = ids[0]
     follow_up = ids[1:]
     db.track_survey(surveyid, track)
-    print( '{:s} will {:s}be tracked'.format( surveyid,
-                                              '' if track else 'not ' ) )
+    print( 'Survey {:s} will {:s}be tracked'.format( surveyid,
+                                                    '' if track else 'not ' ) )
     print()
     # Set or delete the list of follow-up surveys
     if track:
