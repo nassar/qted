@@ -191,3 +191,14 @@ found:
 
     ResponseID | SurveyID | EndDate | PANEL
 
+### Listing messages
+
+To get a list of library messages from your Qualtrics account, for use in
+sending a follow-up invitation:
+
+    $ qted messages
+
+    Category | MessageID          | MessageName
+    INVITE   | MS_03uJDRmpiNDfAfX | Followup Invitation
+
+
