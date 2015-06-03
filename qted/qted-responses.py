@@ -38,17 +38,23 @@ def print_response_data(response_data, responseids_panel):
     print(psv.align(p))
     print()
 
-def print_panels_and_recipients(panels_recipients):
+def print_panels_and_recipients(panels_recipients, surveys_followups):
     if len(panels_recipients) == 0:
         return
-    # First print panels
-    p = 'PanelID | SurveyID | PanelName\n'
+    # Print survey and follow-up IDs
+    p = 'SurveyID | FollowupID\n'
+    for surveyid, followupid in surveys_followups:
+        p += '{:s} | {:s}\n'.format(surveyid, followupid)
+    print(psv.align(p))
+    print()
+    # Print panels
+    p = 'PanelID | FollowupID | PanelName\n'
     for (surveyid, panel, recipients) in panels_recipients:
         p += '{:s} | {:s} | {:s}\n'.format( panel.panelid, surveyid,
                                                              panel.panel_name )
     print(psv.align(p))
     print()
-    # Next print recipients per panel
+    # Print recipients per panel
     p = 'RecipientID | ResponseID | PanelID\n'
     for (surveyid, panel, recipients) in panels_recipients:
         for r in recipients:
@@ -57,9 +63,9 @@ def print_panels_and_recipients(panels_recipients):
     print(psv.align(p))
     print()
 
-def create_sr_panel(sr):
+def create_sr_panel(sr, followupid):
     # Create panel
-    panel_name = '{:s} {:s}'.format(sr.surveyid, timestamp('%Y-%m-%d %H%M%S'))
+    panel_name = '{:s} {:s}'.format(followupid, timestamp('%Y-%m-%d %H%M%S'))
     panelid = panel.create_panel(panel_name, sr)
     # Add recipients to panel
     recipients = []
@@ -85,7 +91,7 @@ def create_sr_panel(sr):
         else:
             recipients.append(Recipient(recipientid, r.responseid))
     # Return panel and recipients
-    return ( sr.surveyid, Panel(panelid, panel_name), recipients )
+    return ( Panel(panelid, panel_name), recipients )
 
 def filter_responses_panel(sr_list):
     """
@@ -136,12 +142,14 @@ def run(args):
     # Create a panel per survey
     if args.panel and len(sr_list_panel) > 0:
         panels_recipients = []
+        surveys_followups = []
         for sr in sr_list_panel:
-            (surveyid, panel, recipients) = create_sr_panel(sr)
-            panels_recipients.append( (surveyid, panel, recipients) )
-            followupid = db.get_next_followupid(surveyid)
+            followupid = db.get_next_followupid(sr.surveyid)
+            surveys_followups.append( (sr.surveyid, followupid) )
+            (panel, recipients) = create_sr_panel(sr, followupid)
+            panels_recipients.append( (followupid, panel, recipients) )
             db.queue_panel(panel.panelid, followupid)
-        print_panels_and_recipients(panels_recipients)
+        print_panels_and_recipients(panels_recipients, surveys_followups)
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(prog='qted responses')

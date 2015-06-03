@@ -55,13 +55,15 @@ def get_tracked_surveys():
 
 def get_survey_by_surveyid(surveyid):
     """
-    Given a survey Id, return (id, surveyid, tracked) from the database, or
+    Given a surveyid, return (id, surveyid, tracked) from the database, or
     None if there is no match.
     """
     with connect() as conn:
-        with conn.cursor() as cur:
+        with cursor(conn) as cur:
             sql = """
-                select id, surveyid, tracked from survey where surveyid = %s;
+                select id, surveyid, tracked, last_responseid
+                from survey
+                where surveyid = %s;
                 """
             data = (surveyid, )
             cur.execute(sql, data)
@@ -69,7 +71,7 @@ def get_survey_by_surveyid(surveyid):
 
 def set_tracking_survey(surveyid, id, track):
     """
-    Given a survey Id, the database Id for the survey (or None if it does not
+    Given a surveyid, the database Id for the survey (or None if it does not
     exist in the database), and the Boolean value track, update the database to
     enable or disable tracking for the survey (track=True means enable,
     track=False means disable).
@@ -248,9 +250,50 @@ def set_follow_up_surveys(surveyid, follow_up):
 def get_next_followupid(surveyid):
     """
     Given a surveyid (which may be either a baseline or follow-up survey),
-    return the next follow-up surveyid.
+    return the next follow-up surveyid, or None if there is no follow-up.
     """
-
+    # First check if surveyid is a baseline survey
+    survey = get_survey_by_surveyid(surveyid)
+    if survey is not None:
+        # Return first follow-up
+        with connect() as conn:
+            with cursor(conn) as cur:
+                sql = '''
+                      select followupid from follow_up where baseline_id = %s
+                          order by rank limit 1;
+                      '''
+                data = survey.id,
+                cur.execute(sql, data)
+                follow_up = cur.fetchone()
+                return follow_up.followupid if follow_up is not None else None
+    # Search for surveyid in follow-ups
+    with connect() as conn:
+        with cursor(conn) as cur:
+            sql = '''
+                  select baseline_id, rank
+                        from follow_up
+                        where followupid = %s;
+                  '''
+            data = surveyid,
+            cur.execute(sql, data)
+            follow_up = cur.fetchone()
+            if follow_up is None:
+                # Unable to find surveyid in baselines or follow-ups
+                return None
+    baseline_id = follow_up.baseline_id
+    rank = follow_up.rank
+    # Return next survey in follow-up list
+    with connect() as conn:
+        with cursor(conn) as cur:
+            sql = '''
+                  select followupid from follow_up
+                      where (baseline_id = %s) and (rank > %s)
+                      order by rank limit 1;
+                  '''
+            data = (baseline_id, rank)
+            cur.execute(sql, data)
+            follow_up = cur.fetchone()
+            return follow_up.followupid if follow_up is not None else None
 
 if __name__ == '__main__':
     pass
