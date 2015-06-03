@@ -34,6 +34,22 @@ def add_recipient(panelid, first_name, last_name, email, ext_data_ref,
         return None
     return recipientid
 
+def send_survey_to_panel(surveyid, senddate, messageid, panelid):
+    p = { 'Request': 'sendSurveyToPanel',
+          'SurveyID': surveyid,
+          'SendDate': senddate,
+          'SentFromAddress': config.get_config('user_email'),
+          'FromEmail': config.get_config('user_email'),
+          'FromName': 'Survey Creator',
+          'Subject': 'Follow-up Survey',
+          'MessageID': messageid,
+          'MessageLibraryID': config.get_config('qt_library'),
+          'PanelID': panelid,
+          'PanelLibraryID': config.get_config('qt_library'),
+          'ExpirationDate': '3000-01-01 00:00:00' }
+    (request, response) = client.request(p)
+    return response
+
 if __name__ == '__main__':
     create_panel()
     pass

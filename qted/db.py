@@ -173,6 +173,18 @@ def get_response_by_responseid(responseid):
 #    else:
 #        set_response_data(response.id, response_data)
 
+def select_panel_by_invited(invited):
+    with connect() as conn:
+        with cursor(conn) as cur:
+            sql = '''
+                  select id, panelid, surveyid, invited
+                  from panel
+                  where invited = %s;
+                  '''
+            data = (invited, )
+            cur.execute(sql, data)
+            return cur.fetchall()
+
 def select_panel_by_panelid(panelid):
     with connect() as conn:
         with cursor(conn) as cur:
