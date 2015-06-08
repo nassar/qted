@@ -204,4 +204,13 @@ sending a follow-up invitation:
     Category | MessageID          | MessageName
     INVITE   | MS_03uJDRmpiNDfAfX | Followup Invitation
 
+### Sending survey invitations
+
+To send survey invitations to all newly created panels:
+
+    $ qted send --all
+
+    SurveyID           | PanelID
+    SV_eDrK72Xw7ywWhud | ML_7WDFxFL7ZlnSa5n
+
 
