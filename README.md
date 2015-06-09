@@ -128,12 +128,15 @@ Or add the --verbose (-v) option for more detail:
 
 ### Tracking a survey
 
-To start tracking a survey, use the track command and specify the first few
-characters of the Survey ID (enough characters to uniquely identify a survey).
-Follow-up surveys can be provided using the --follow-up option with a
+To start tracking a baseline survey, use the track command and specify the
+first few characters of the Survey ID (enough characters to uniquely identify a
+survey).  Follow-up surveys can be provided using the --follow-up option with a
 comma-separated list of Survey IDs.  E.g.:
 
     $ qted track SV_3P3 --follow-up SV_eDr,SV_0JO
+
+Note that the track command is only intended to track baseline surveys.
+Follow-up surveys should always appear after the --follow-up option.
 
 To see which surveys are being tracked:
 
@@ -204,9 +207,9 @@ sending a follow-up invitation:
     Category | MessageID          | MessageName
     INVITE   | MS_03uJDRmpiNDfAfX | Followup Invitation
 
-### Sending survey invitations
+### Scheduling survey invitations
 
-To send survey invitations to all newly created panels:
+To schedule survey invitations to be sent to all newly created panels:
 
     $ qted send --all
 
