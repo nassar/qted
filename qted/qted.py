@@ -11,6 +11,7 @@ usage: qted COMMAND [ARGUMENTS]...
 where COMMAND is one of:
 config       - modify the configuration file
 debug-server - send requests to the Qualtrics server
+follow       - add follow-ups to tracked surveys
 messages     - list all messages in the configured library
 responses    - retrieve response data for tracked surveys and optionally create
                panels for any responses indicating a follow-up
@@ -25,6 +26,7 @@ def help():
 def valid_command(cmd):
     return cmd in ( 'config',
                     'debug-server',
+                    'follow',
                     'messages',
                     'responses',
                     'send',
