@@ -34,9 +34,9 @@ System requirements
 
 The qted software has the following dependencies:
 
-    Python 3.4 or later, with the psycopg2 package
+    * Python 3.4 or later, with the psycopg2 package
 
-    PostgreSQL 8.4 or later
+    * PostgreSQL 8.4 or later
 
 
 Configuration
