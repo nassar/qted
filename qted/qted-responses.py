@@ -72,10 +72,8 @@ def create_sr_panel(sr, followupid):
     for r in sr.responses:
         first_name = r.data.get('CI_1_TEXT') or ''
         last_name = r.data.get('CI_2_TEXT') or ''
-#### Temporarily send follow-up surveys to user email
-#        email = r.data.get('CI_3_TEXT') or ''
-        email = config.get_config('user_email')
-####
+        email = r.data.get('CI_3_TEXT') or ''
+#        email = config.get_config('user_email')
         ext_data_ref = r.responseid or ''
         marstat = r.data.get('marstat') or ''
         if marstat != '':
