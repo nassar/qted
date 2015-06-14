@@ -29,8 +29,18 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
-Configuring qted
-----------------
+System requirements
+-------------------
+
+The qted software has the following dependencies:
+
+    Python 3.4 or later, with the psycopg2 package
+
+    PostgreSQL 8.4 or later
+
+
+Configuration
+-------------
 
 First set the configuration values for qted, such as qt_user, qt_token, etc.:
 
@@ -82,8 +92,8 @@ the file database/database-schema.sql) using the psql tool, e.g.:
     $ psql -U nassar -d qted_nassar -f database-schema.sql
 
 
-Tutorial
---------
+Using qted
+----------
 
 ### Running qted and listing surveys
 
