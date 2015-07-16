@@ -236,7 +236,7 @@ def delete_follow_up_surveys(surveyid):
             data = surveyid,
             cur.execute(sql, data)
 
-def set_follow_up_surveys(surveyid, follow_up, messageid, time_interval):
+def set_follow_up_surveys(surveyid, follow_up):
     # First delete the existing list of follow-ups from the database
     delete_follow_up_surveys(surveyid)
     # Add the new list
@@ -258,8 +258,34 @@ def set_follow_up_surveys(surveyid, follow_up, messageid, time_interval):
                                              messageid, time_interval)
                       values (%s, %s, %s, %s, %s);
                       '''
-                data = baseline_id, followupid, rank, messageid, time_interval
+                data = baseline_id, followupid, rank, '', ''
                 cur.execute(sql, data)
+
+def add_followup(followupid, baselineid, messageid, months):
+    with connect() as conn:
+        with cursor(conn) as cur:
+            # Retrieve database id of survey
+            sql = '''
+                  select id from survey where surveyid = %s;
+                  '''
+            data = baselineid,
+            cur.execute(sql, data)
+            baseline_id = cur.fetchone().id
+            # Determine rank based on rank of existing followups if any
+            sql = '''
+                  select rank from follow_up order by rank desc limit 1;
+                  '''
+            cur.execute(sql)
+            result = cur.fetchone()
+            rank = (result.rank if result is not None else 0) + 1000
+            # Insert followup
+            sql = '''
+                  insert into follow_up (baseline_id, followupid, rank,
+                                         messageid, time_interval)
+                  values (%s, %s, %s, %s, %s);
+                  '''
+            data = baseline_id, followupid, rank, messageid, months
+            cur.execute(sql, data)
 
 def get_next_followupid(surveyid):
     """

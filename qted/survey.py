@@ -39,6 +39,26 @@ def retrieve_surveys_by_ids(surveyids):
                 for id in surveyids ]
     return matches
 
+def locate_surveys(surveyids):
+    """
+    Given a partial or complete surveyid: return a matching survey's ID; or if
+    multple IDs match then print the matching surveys and return None; or if
+    there is no match then print an error message and return None.
+    """
+    surveys_list = retrieve_surveys_by_ids(surveyids)
+    for surveys in surveys_list:
+        surveyid = surveys[0]
+        if len(surveys) == 1:
+            print('No survey matching ID "{:s}" was found'.format(surveyid))
+            print()
+            return None
+        if len(surveys) > 2:
+            print('ID "{:s}" matches more than one survey:'.format(surveyid))
+            survey.print_surveys(surveys[1:])
+            print()
+            return None
+    return [ s[1]['SurveyID'] for s in surveys_list ]
+
 def retrieve_response_data(surveyid, last_responseid):
     """
     Retrieve the list of new response data for the given surveyid and since the

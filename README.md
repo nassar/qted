@@ -136,28 +136,62 @@ Or add the --verbose (-v) option for more detail:
     SV_eDrK72Xw7ywWhud | First Followup  | Active       | 2015-02-13 12:09:05
     SV_0JOsg38Jt1EQ2Mt | Second Followup | Active       | 2015-02-13 12:37:14
 
+These survey IDs will be used with subsequent commands below.
+
 ### Tracking a survey
 
 To start tracking a baseline survey, use the track command and specify the
 first few characters of the Survey ID (enough characters to uniquely identify a
-survey).  Follow-up surveys can be provided using the --follow-up option with a
-comma-separated list of Survey IDs.  E.g.:
+survey).
 
-    $ qted track SV_3P3 --follow-up SV_eDr,SV_0JO
+    $ qted track SV_3P3
 
 Note that the track command is only intended to track baseline surveys.
-Follow-up surveys should always appear after the --follow-up option.
+Follow-up surveys will be added later using the followup command.
 
 To see which surveys are being tracked:
 
     $ qted track
 
     SurveyID           | FollowupIDs
-    SV_3P3Og74F2syoitn | SV_eDrK72Xw7ywWhud,SV_0JOsg38Jt1EQ2Mt
+    SV_3P3Og74F2syoitn | 
 
 To stop tracking a survey, use the --stop option:
 
     $ qted track --stop SV_3P3
+
+### Listing messages
+
+Before adding follow-up surveys, we need message IDs for use in sending
+follow-up invitations.
+
+To get a list of library messages from your Qualtrics account:
+
+    $ qted messages
+
+    Category | MessageID          | MessageName
+    INVITE   | MS_03uJDRmpiNDfAfX | First Followup Invitation
+    INVITE   | MS_cGxDRUepiimd6PH | Second Followup Invitation
+
+### Adding follow-up surveys
+
+To add follow-up surveys to a tracked baseline survey:
+
+    $ qted followup --baselineid SV_3P3 --messageid MS_03uJDRmpiNDfAfX \
+          --months 6 SV_eDr
+
+    $ qted followup --baselineid SV_3P3 --messageid MS_cGxDRUepiimd6PH \
+          --months 12 SV_0JO
+
+The follow-up survey IDs here are taken from the output of the surveys command
+earlier.
+
+To see that the follow-up surveys have been added:
+
+    $ qted track
+
+    SurveyID           | FollowupIDs
+    SV_3P3Og74F2syoitn | SV_eDrK72Xw7ywWhud,SV_0JOsg38Jt1EQ2Mt
 
 ### Retrieving responses and creating panels
 
@@ -206,16 +240,6 @@ found:
     $ qted responses
 
     ResponseID | SurveyID | EndDate | PANEL
-
-### Listing messages
-
-To get a list of library messages from your Qualtrics account, for use in
-sending a follow-up invitation:
-
-    $ qted messages
-
-    Category | MessageID          | MessageName
-    INVITE   | MS_03uJDRmpiNDfAfX | Followup Invitation
 
 ### Scheduling survey invitations
 
