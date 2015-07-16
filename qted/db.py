@@ -236,7 +236,7 @@ def delete_follow_up_surveys(surveyid):
             data = surveyid,
             cur.execute(sql, data)
 
-def set_follow_up_surveys(surveyid, follow_up):
+def set_follow_up_surveys(surveyid, follow_up, messageid, time_interval):
     # First delete the existing list of follow-ups from the database
     delete_follow_up_surveys(surveyid)
     # Add the new list
@@ -254,10 +254,11 @@ def set_follow_up_surveys(surveyid, follow_up):
             for followupid in follow_up:
                 rank += 1000
                 sql = '''
-                      insert into follow_up (baseline_id, followupid, rank)
-                      values (%s, %s, %s);
+                      insert into follow_up (baseline_id, followupid, rank,
+                                             messageid, time_interval)
+                      values (%s, %s, %s, %s, %s);
                       '''
-                data = baseline_id, followupid, rank
+                data = baseline_id, followupid, rank, messageid, time_interval
                 cur.execute(sql, data)
 
 def get_next_followupid(surveyid):
