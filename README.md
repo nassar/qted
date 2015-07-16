@@ -250,6 +250,5 @@ To schedule survey invitations to be sent to all newly created panels:
 
     SurveyID           | PanelID            | MessageID          | SendDate
     SV_eDrK72Xw7ywWhud | ML_8AoV55m3CYD2Vr7 | MS_03uJDRmpiNDfAfX | 2016-01-16
-    SV_eDrK72Xw7ywWhud | ML_cOpi4Vlz37pwGUJ | MS_03uJDRmpiNDfAfX | 2016-01-16
 
 
