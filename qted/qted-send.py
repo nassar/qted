@@ -1,4 +1,6 @@
 import argparse
+from datetime import date
+from dateutil.relativedelta import relativedelta
 
 import db
 import panel
@@ -26,13 +28,24 @@ def retrieve_panels(panelid, all):
             panels = [ p ]
     return panels
 
+def calculate_send_date(months):
+    calc_date = date.today() + relativedelta(months=months)
+    return str(calc_date) + ' 00:00:00'
+
 def send(panels, message):
     panels_sent = []
     for p in panels:
+        # Get details associated with follow-up
+        followup = db.select_followup_by_followupid(p.surveyid)
+        senddate = calculate_send_date(int(followup.time_interval))
+        messageid = followup.messageid
+        # Schedule invitation
         r = panel.send_survey_to_panel(surveyid=p.surveyid,
-                                       senddate='2015-06-03 17:20:00',
-                                       messageid='MS_03uJDRmpiNDfAfX',
+                                       senddate=senddate,
+                                       messageid=messageid,
                                        panelid=p.panelid)
+#                                       senddate='2015-06-03 17:20:00',
+#                                       messageid='MS_03uJDRmpiNDfAfX',
 #        print(r)
         # TODO add to panels_sent only if successful
         panels_sent.append(p)

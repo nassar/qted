@@ -184,7 +184,8 @@ To add follow-up surveys to a tracked baseline survey:
           --months 12 SV_0JO
 
 The follow-up survey IDs here are taken from the output of the surveys command
-earlier.
+earlier.  We have specified two follow-up surveys, scheduled at 6 and 12 months
+from today.
 
 To see that the follow-up surveys have been added:
 

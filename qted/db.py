@@ -335,6 +335,19 @@ def get_next_followupid(surveyid):
             follow_up = cur.fetchone()
             return follow_up.followupid if follow_up is not None else None
 
+def select_followup_by_followupid(followupid):
+    with connect() as conn:
+        with cursor(conn) as cur:
+            sql = '''
+                  select id, baseline_id, followupid, rank, messageid,
+                         time_interval
+                  from follow_up
+                  where followupid = %s;
+                  '''
+            data = (followupid, )
+            cur.execute(sql, data)
+            return cur.fetchone()
+
 if __name__ == '__main__':
     pass
 

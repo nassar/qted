@@ -19,7 +19,9 @@ create table follow_up (
     rank bigint not null,
         unique (baseline_id, rank),
     messageid text not null,
-    time_interval text not null
+        check (messageid <> '')
+    time_interval text not null,
+        check (time_interval <> '')
 );
 
 create table response (
