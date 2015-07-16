@@ -4,6 +4,8 @@ import json
 from collections import namedtuple
 import time
 import datetime
+from datetime import date
+from dateutil.relativedelta import relativedelta
 
 import db
 import survey
@@ -110,6 +112,10 @@ def filter_responses_panel(sr_list):
                                                  sr.followupid) )
     return (new_sr_list, responseids_panel)
 
+def calculate_send_date(months):
+    calc_date = date.today() + relativedelta(months=months)
+    return str(calc_date) + ' 00:00:00'
+
 def run(args):
     print()
     # Pull data only for tracked surveys
@@ -150,7 +156,13 @@ def run(args):
                 surveys_followups.append( (sr.surveyid, sr.followupid) )
                 (panel, recipients) = create_sr_panel(sr, sr.followupid)
                 panels_recipients.append( (sr.followupid, panel, recipients) )
-                db.queue_panel(panel.panelid, sr.followupid)
+                # Get details associated with follow-up
+                f = db.select_followup_by_followupid(sr.followupid)
+                senddate = calculate_send_date(int(f.time_interval))
+                messageid = f.messageid
+                # Queue panel in the database
+                db.queue_panel(panel.panelid, sr.followupid, messageid,
+                               senddate)
         print_panels_and_recipients(panels_recipients, surveys_followups)
 
 if __name__ == '__main__':

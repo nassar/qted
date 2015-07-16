@@ -1,23 +1,18 @@
 import argparse
-from datetime import date
-from dateutil.relativedelta import relativedelta
-from collections import namedtuple
 
 import db
 import panel
 import psv
 
-SentPanels = namedtuple('SentPanels', 'panel time_interval senddate messageid')
-
-def print_sent(sent_panels):
+def print_sent(panels):
     """
     """
     p = 'SurveyID | PanelID | MessageID | SendDate\n'
-    for sp in sent_panels:
-        senddate_notime = sp.senddate.split(' ')[0]
-        p += '{:s} | {:s} | {:s} | {:s}\n'.format(sp.panel.surveyid,
-                                                  sp.panel.panelid,
-                                                  sp.messageid,
+    for panel in panels:
+        senddate_notime = panel.senddate.split(' ')[0]
+        p += '{:s} | {:s} | {:s} | {:s}\n'.format(panel.surveyid,
+                                                  panel.panelid,
+                                                  panel.messageid,
                                                   senddate_notime)
     print(psv.align(p))
     print()
@@ -35,25 +30,16 @@ def retrieve_panels(panelid, all):
             panels = [ p ]
     return panels
 
-def calculate_send_date(months):
-    calc_date = date.today() + relativedelta(months=months)
-    return str(calc_date) + ' 00:00:00'
-
 def send(panels, message):
     panels_sent = []
     for p in panels:
-        # Get details associated with follow-up
-        followup = db.select_followup_by_followupid(p.surveyid)
-        senddate = calculate_send_date(int(followup.time_interval))
-        messageid = followup.messageid
         # Schedule invitation
         r = panel.send_survey_to_panel(surveyid=p.surveyid,
-                                       senddate=senddate,
-                                       messageid=messageid,
+                                       senddate=p.senddate,
+                                       messageid=p.messageid,
                                        panelid=p.panelid)
         # TODO add to panels_sent only if successful
-        sp = SentPanels(p, followup.time_interval, senddate, messageid)
-        panels_sent.append(sp)
+        panels_sent.append(p)
         # If send was successful, set panel invited to True in database
         if r is not None:
             result = r.get('Result')

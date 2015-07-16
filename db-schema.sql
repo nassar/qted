@@ -37,6 +37,10 @@ create table panel (
     panelid text not null,
         unique (panelid),
     surveyid text not null,
+    messageid text not null,
+        check (messageid <> ''),
+    senddate text not null,
+        check (senddate <> ''),
     invited boolean not null
 );
 

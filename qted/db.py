@@ -177,7 +177,7 @@ def select_panel_by_invited(invited):
     with connect() as conn:
         with cursor(conn) as cur:
             sql = '''
-                  select id, panelid, surveyid, invited
+                  select id, panelid, surveyid, messageid, senddate, invited
                   from panel
                   where invited = %s;
                   '''
@@ -189,7 +189,7 @@ def select_panel_by_panelid(panelid):
     with connect() as conn:
         with cursor(conn) as cur:
             sql = '''
-                  select id, panelid, surveyid, invited
+                  select id, panelid, surveyid, messageid, senddate, invited
                   from panel
                   where panelid = %s;
                   '''
@@ -197,14 +197,15 @@ def select_panel_by_panelid(panelid):
             cur.execute(sql, data)
             return cur.fetchone()
 
-def insert_panel(panelid, surveyid, invited):
+def insert_panel(panelid, surveyid, messageid, senddate, invited):
     with connect() as conn:
         with cursor(conn) as cur:
             sql = '''
-                  insert into panel (id, panelid, surveyid, invited)
-                  values (DEFAULT, %s, %s, %s);
+                  insert into panel (id, panelid, surveyid, messageid,
+                                     senddate, invited)
+                  values (DEFAULT, %s, %s, %s, %s, %s);
                   '''
-            data = (panelid, surveyid, invited)
+            data = (panelid, surveyid, messageid, senddate, invited)
             cur.execute(sql, data)
 
 def update_panel_by_panelid(panelid, invited):
@@ -216,13 +217,13 @@ def update_panel_by_panelid(panelid, invited):
             data = (invited, panelid)
             cur.execute(sql, data)
 
-def queue_panel(panelid, surveyid):
+def queue_panel(panelid, surveyid, messageid, senddate):
     """
     Given a panel Id, queue the panel in the database.
     """
     panel = select_panel_by_panelid(panelid)
     if panel is None:
-        insert_panel(panelid, surveyid, invited=False)
+        insert_panel(panelid, surveyid, messageid, senddate, invited=False)
     else:
         update_panel_by_panelid(panel.id, invited=False)
 
