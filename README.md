@@ -251,4 +251,14 @@ To schedule survey invitations to be sent to all newly created panels:
     SurveyID           | PanelID            | MessageID          | SendDate
     SV_eDrK72Xw7ywWhud | ML_8AoV55m3CYD2Vr7 | MS_03uJDRmpiNDfAfX | 2016-01-16
 
+The send command can also be used with the --preview option to list created
+panels.  When this option is used, no survey invitations are scheduled.  The
+panels listed include those not yet scheduled as well as those that are
+scheduled but still in the future (i.e. scheduled but not yet sent).
+
+    $ qted send --preview
+
+    SurveyID           | PanelID            | MessageID          | SendDate   | Scheduled
+    SV_eDrK72Xw7ywWhud | ML_8AoV55m3CYD2Vr7 | MS_03uJDRmpiNDfAfX | 2016-01-16 | Yes
+
 
