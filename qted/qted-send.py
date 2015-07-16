@@ -54,8 +54,13 @@ def send(panels, message):
         # TODO add to panels_sent only if successful
         sp = SentPanels(p, followup.time_interval, senddate, messageid)
         panels_sent.append(sp)
-        # TODO if send was successful, set panel invited to True in database
-        # {'Result': {'Success': True, 'DistributionQueueID': 'EMD_6hP4N4bXrxGGQFD', 'EmailDistributionID': 'EMD_6hP4N4bXrxGGQFD'}, 'Meta': {'Debug': '', 'Status': 'Success'}}
+        # If send was successful, set panel invited to True in database
+        if r is not None:
+            result = r.get('Result')
+            if result is not None:
+                success = result.get('Success')
+                if success is not None and success == True:
+                   db.update_panel_by_panelid(p.panelid, invited=True)
     print_sent(panels_sent)
 
 def run(args):
