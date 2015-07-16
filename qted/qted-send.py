@@ -1,17 +1,24 @@
 import argparse
 from datetime import date
 from dateutil.relativedelta import relativedelta
+from collections import namedtuple
 
 import db
 import panel
 import psv
 
-def print_sent(panels):
+SentPanels = namedtuple('SentPanels', 'panel time_interval senddate messageid')
+
+def print_sent(sent_panels):
     """
     """
-    p = 'SurveyID | PanelID\n'
-    for panel in panels:
-        p += '{:s} | {:s}\n'.format(panel.surveyid, panel.panelid)
+    p = 'SurveyID | PanelID | MessageID | SendDate\n'
+    for sp in sent_panels:
+        senddate_notime = sp.senddate.split(' ')[0]
+        p += '{:s} | {:s} | {:s} | {:s}\n'.format(sp.panel.surveyid,
+                                                  sp.panel.panelid,
+                                                  sp.messageid,
+                                                  senddate_notime)
     print(psv.align(p))
     print()
 
@@ -44,11 +51,9 @@ def send(panels, message):
                                        senddate=senddate,
                                        messageid=messageid,
                                        panelid=p.panelid)
-#                                       senddate='2015-06-03 17:20:00',
-#                                       messageid='MS_03uJDRmpiNDfAfX',
-#        print(r)
         # TODO add to panels_sent only if successful
-        panels_sent.append(p)
+        sp = SentPanels(p, followup.time_interval, senddate, messageid)
+        panels_sent.append(sp)
         # TODO if send was successful, set panel invited to True in database
         # {'Result': {'Success': True, 'DistributionQueueID': 'EMD_6hP4N4bXrxGGQFD', 'EmailDistributionID': 'EMD_6hP4N4bXrxGGQFD'}, 'Meta': {'Debug': '', 'Status': 'Success'}}
     print_sent(panels_sent)
